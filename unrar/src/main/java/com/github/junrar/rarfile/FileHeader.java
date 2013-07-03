@@ -273,9 +273,11 @@ public class FileHeader extends BlockHeader {
 	return fileNameBytes;
     }
 
-    public String getFileNameString() {
-	return fileName;
-    }
+   public String getFileNameString() {
+     fileName = fileName.replace("\\", File.separator); // For illegal file separator characters  
+     return fileName;
+   }
+
 
     public void setFileName(String fileName) {
 	this.fileName = fileName;
