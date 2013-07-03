@@ -424,6 +424,55 @@ public class Archive implements Closeable {
 			// logger.info("\n--------end header--------");
 		}
 	}
+	
+	/**
+	 * Extracts specified header to specified directory. Path in the
+	 * header and specified directory will be constructed if it does
+	 * not already exist.
+	 *  
+	 * @param hd specified header
+	 * @param destPath directory where the header needs to be extracted
+	 * @throws RarException
+	 * 
+	 */
+	public void extractFile(FileHeader hd, String destPath) throws RarException
+	{
+		File oFile, oFinalDir;
+		OutputStream oFileStream;
+		String sFilePath;
+		
+		
+	 if (!headers.contains(hd))
+	  {
+	   throw new RarException(RarExceptionType.headerNotInArchive);
+	  }
+	 try
+	  {
+		 
+		 sFilePath = destPath + File.separator + hd.getFileNameString();
+		 oFile = new File(sFilePath);
+		 oFinalDir = new File(oFile.getParent());
+		 
+		 if (!oFinalDir.exists()) {
+			 oFinalDir.mkdirs();
+		 }
+		 
+			oFileStream = new FileOutputStream(oFile);
+			doExtractFile(hd, oFileStream);
+			oFileStream.close();
+	  }
+	 catch (Exception e)
+	  {
+	   if (e instanceof RarException)
+	    {
+	     throw (RarException) e;
+	    }
+	   else
+	    {
+	     throw new RarException(e);
+	    }
+	  }
+	}
 
 	/**
 	 * Extract the file specified by the given header and write it to the
